@@ -7,6 +7,10 @@ p {
   line-height: 28px;
 }
 
+.paper-btn[popover] {
+  margin: 0;
+}
+
 .small-header {
   background: floralwhite;
   position: absolute;

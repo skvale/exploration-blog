@@ -7,30 +7,34 @@ const result = Collisions.createResult()
 
 export default class Tank extends React.Component {
 	collisions = new Collisions()
-	bodies = []
 
 	updateKeys = (e) => {
 		const keydown = e.type === 'keydown'
 		const key = e.key.toLowerCase()
 
 		key === 'w' && (this.up = keydown)
+		// key === 'arrowup' && (this.up = keydown)
+
 		key === 's' && (this.down = keydown)
+		// key === 'arrowdown' && (this.down = keydown)
+
 		key === 'a' && (this.left = keydown)
+		// key === 'arrowleft' && (this.left = keydown)
+
 		key === 'd' && (this.right = keydown)
+		// key === 'arrowright' && (this.right = keydown)
 	}
 
 	componentDidMount() {
 		document.addEventListener('keydown', this.updateKeys)
 		document.addEventListener('keyup', this.updateKeys)
-		this.createPlayer(400, 300)
-		this.createMap()
 		this.canvas = document.createElement('canvas')
 		this.canvas.width = width
 		this.canvas.height = height
 		this.element.appendChild(this.canvas)
 		this.context = this.canvas.getContext('2d')
-
-		this.bvh_checkbox = this.element.querySelector('#bvh')
+		this.createPlayer(10, 300)
+		this.createMap()
 
 		const frame = () => {
 			this.update()
@@ -67,8 +71,8 @@ export default class Tank extends React.Component {
 		if (this.player.velocity > 0) {
 			this.player.velocity -= 0.05
 
-			if (this.player.velocity > 3) {
-				this.player.velocity = 3
+			if (this.player.velocity > 3.5) {
+				this.player.velocity = 3.5
 			}
 		} else if (this.player.velocity < 0) {
 			this.player.velocity += 0.05
@@ -82,10 +86,7 @@ export default class Tank extends React.Component {
 			this.player.velocity = 0
 		}
 
-		if (this.player.velocity) {
-			this.player.x += x * this.player.velocity
-			this.player.y += y * this.player.velocity
-		}
+		this.updatePlayer(x, y)
 	}
 
 	handleCollisions() {
@@ -93,58 +94,59 @@ export default class Tank extends React.Component {
 
 		const potentials = this.player.potentials()
 
-		// Negate any collisions
 		for (const body of potentials) {
 			if (this.player.collides(body, result)) {
 				this.player.x -= result.overlap * result.overlap_x
 				this.player.y -= result.overlap * result.overlap_y
 
 				this.player.velocity *= 0.9
-				if (result.b.foo) {
-					window.location = result.b.foo
+				if (result.b.href) {
+					this.addItem(result.b.href)
 				}
 			}
 		}
 	}
 
+	addItem(href) {
+		const items = JSON.parse(localStorage.getItem('p-paper-blog-items')) || []
+		if (!items.includes(href)) {
+			items.push(href)
+			if (items.length === 4) {
+				items.push('/bonus')
+			}
+		}
+		localStorage.setItem('p-paper-blog-items', [JSON.stringify(items)])
+		window.location = href
+	}
+
 	renderCollisions() {
-		this.context.fillStyle = '#332212'
+		this.context.fillStyle = '#3f2514'
 		this.context.fillRect(0, 0, 800, 600)
 
-		this.context.strokeStyle = '#FFFFFF'
+		this.context.strokeStyle = '#fff'
 		this.context.beginPath()
 		this.collisions.draw(this.context)
 		this.context.stroke()
+	}
 
-		if (this.bvh_checkbox.checked) {
-			this.context.strokeStyle = '#00FF00'
-			this.context.beginPath()
-			this.collisions.drawBVH(this.context)
-			this.context.stroke()
+	updatePlayer(x, y) {
+		if (this.player.velocity) {
+			this.player.x += x * this.player.velocity
+			this.player.y += y * this.player.velocity
 		}
 	}
 
-	render() {
-		return (
-			<div ref={el => {this.element = el}} >
-				<div><b>W, S</b> - Accelerate/Decelerate</div>
-				<div><b>A, D</b> - Turn</div>
-				<div>
-					<label>
-						<input id='bvh' type='checkbox'/> Show Bounding Volume Hierarchy</label>
-					</div>
-			</div>
-		)
-	}
-
 	createPlayer(x, y) {
-		this.player = this.collisions.createPolygon(x, y, [
-			[-20, -10],
-			[20, -10],
-			[20, 10],
-			[-20, 10],
-		], 0.2)
+		const size = 3
+		const doubleSize = 2 * size
+		const angle = 0.2
 
+		this.player = this.collisions.createPolygon(x, y, [
+			[-doubleSize, -size],
+			[doubleSize, -size],
+			[doubleSize, size],
+			[-doubleSize, size],
+		], angle)
 		this.player.velocity = 0
 	}
 
@@ -153,11 +155,11 @@ export default class Tank extends React.Component {
 		this.context.fillText("About", 385, 500)
 		this.context.fillText("Posts", 520, 130)
 		this.context.fillText("* You are here", this.player.x, this.player.y)
+		this.context.fillText("Resources", 80, 100)
+		this.context.fillText("Home", 100, 500)
 	}
 
 	createMap() {
-
-		// World bounds
 		this.collisions.createPolygon(0, 0, [
 			[0, 0],
 			[width, 0]
@@ -175,13 +177,13 @@ export default class Tank extends React.Component {
 			[0, 0]
 		])
 
-		// Factory
-		this.collisions.createPolygon(100, 100, [
+		const resources = this.collisions.createPolygon(100, 100, [
 			[-50, -50],
 			[50, -50],
 			[50, 50],
 			[-50, 50],
 		], 0.4)
+		resources.href = '/resources'
 		this.collisions.createPolygon(190, 105, [
 			[-20, -20],
 			[20, -20],
@@ -193,34 +195,24 @@ export default class Tank extends React.Component {
 		this.collisions.createCircle(165, 165, 8)
 		this.collisions.createCircle(145, 165, 8)
 
-		// Airstrip
-		this.collisions.createPolygon(230, 50, [
-			[-150, -30],
-			[150, -30],
-			[150, 30],
-			[-150, 30],
-		], 0.4)
-
-		// HQ
-		this.collisions.createPolygon(100, 500, [
+		const home = this.collisions.createPolygon(100, 500, [
 			[-40, -50],
 			[40, -50],
 			[50, 50],
 			[-50, 50],
 		], 0.2)
+		home.href = '/home'
 		this.collisions.createCircle(180, 490, 20)
 		this.collisions.createCircle(175, 540, 20)
 
-		// Barracks
-		const b = this.collisions.createPolygon(400, 500, [
+		const about = this.collisions.createPolygon(400, 500, [
 			[-60, -20],
 			[60, -20],
 			[60, 20],
 			[-60, 20]
 		], 1.7)
-		b.foo = '/about'
+		about.href = '/about'
 
-		// Mountains
 		this.collisions.createPolygon(750, 0, [
 			[0, 0],
 			[-20, 100]
@@ -258,6 +250,16 @@ export default class Tank extends React.Component {
 			[-110, 50],
 			[-100, 20],
 		])
-		posts.foo = '/posts'
+		posts.href = '/posts'
+	}
+
+	render() {
+		return (
+			<div ref={el => {this.element = el}} >
+				<div><b>W</b> to Accelerate</div>
+				<div><b>A or D</b> to Turn</div>
+				<div>Collide to navigate</div>
+			</div>
+		)
 	}
 }

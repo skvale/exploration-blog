@@ -13,8 +13,10 @@ class App extends React.Component {
     const { route, post } = router()
 
     switch(route) {
-      case ROUTES.HOME:
+      case ROUTES.START:
         return <Explorer />
+      case ROUTES.HOME:
+        return <div>Home</div>
       case ROUTES.POSTS:
         return <Posts />
       case ROUTES.POST:
@@ -23,6 +25,8 @@ class App extends React.Component {
         return <div>about</div>
       case ROUTES.RESOURCES:
         return <div>resources</div>
+      case ROUTES.BONUS:
+        return <div>Bonus</div>
       default:
         return <div>oops</div>
     }
@@ -44,28 +48,26 @@ class App extends React.Component {
     )
   }
 
+  get availableRoutes () {
+    return JSON.parse(localStorage.getItem('p-paper-blog-items')) || []
+  }
+
   get header () {
     const { route } = router()
     const buttonClass =
       [ 'paper-btn'
       , 'p-blog-header-btn'
-      , route === ROUTES.HOME ? 'btn-small' : ''
+      , route !== ROUTES.HOME ? 'btn-small' : ''
       ].join(' ')
     return (
       <div className="background-primary border padding row">
-        <a href={ROUTES.HOME} className={buttonClass}>
-          home
-        </a>
-        <a href={ROUTES.POSTS} className={buttonClass}>
-          posts
-        </a>
-        <a href={ROUTES.ABOUT} className={buttonClass}>
-          about
-        </a>
-        <a href={ROUTES.RESOURCES} className={buttonClass}>
-          resources
-        </a>
-        <a className={buttonClass}>
+        { this.availableRoutes.sort().map(route =>
+          <a href={route} className={buttonClass} key={route}>
+            {route.substring(1)}
+          </a>
+        )}
+        <a href={ROUTES.START} className={buttonClass} popover="Return to the map" popover-position="right">
+          map
           <Globe />
         </a>
       </div>
