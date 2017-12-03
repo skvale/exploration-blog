@@ -5,6 +5,7 @@ import Post from './posts/post'
 import router, { ROUTES } from './router'
 import Globe from 'react-icons/lib/fa/globe'
 import settings from './site-settings'
+import Explorer from './explorer/explorer'
 
 class App extends React.Component {
 
@@ -13,7 +14,7 @@ class App extends React.Component {
 
     switch(route) {
       case ROUTES.HOME:
-        return <div>home</div>
+        return <Explorer />
       case ROUTES.POSTS:
         return <Posts />
       case ROUTES.POST:
