@@ -1,13 +1,16 @@
 import React from 'react'
-import './App.css'
+import './app.css'
 import Posts from './posts/posts'
 import Post from './posts/post'
 import router, { ROUTES } from './router'
+import Globe from 'react-icons/lib/fa/globe'
+import settings from './site-settings'
 
 class App extends React.Component {
 
   get content () {
     const { route, post } = router()
+
     switch(route) {
       case ROUTES.HOME:
         return <div>home</div>
@@ -29,35 +32,40 @@ class App extends React.Component {
     if (route === ROUTES.HOME) {
       return (
         <h2>
-          Homesteading
+          {settings.header}
         </h2>
       )
     }
     return (
-      <h6>
-        Homesteading
+      <h6 className='small-header'>
+        {settings.header}
       </h6>
     )
   }
 
   get header () {
     const { route } = router()
-    const buttonClass = route === ROUTES.HOME
-      ? 'margin paper-btn'
-      : 'paper-btn btn-small'
+    const buttonClass =
+      [ 'paper-btn'
+      , 'p-blog-header-btn'
+      , route === ROUTES.HOME ? 'btn-small' : ''
+      ].join(' ')
     return (
-      <div className="background-primary border border-5 padding">
-        <a href='/' className={buttonClass}>
+      <div className="background-primary border padding row">
+        <a href={ROUTES.HOME} className={buttonClass}>
           home
         </a>
-        <a href='/posts' className={buttonClass}>
+        <a href={ROUTES.POSTS} className={buttonClass}>
           posts
         </a>
-        <a href='/about' className={buttonClass}>
+        <a href={ROUTES.ABOUT} className={buttonClass}>
           about
         </a>
-        <a href='/resources' className={buttonClass}>
+        <a href={ROUTES.RESOURCES} className={buttonClass}>
           resources
+        </a>
+        <a className={buttonClass}>
+          <Globe />
         </a>
       </div>
     )
@@ -65,7 +73,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="margin-large">
+      <div className="margin">
         {this.title}
         {this.header}
         {this.content}

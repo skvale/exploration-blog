@@ -1,23 +1,33 @@
 import React from 'react'
 import allPosts from './all-posts'
 
-const Posts = () => {
-  return (
-    <div className='margin-large'>
-      {allPosts.map((post, idx) =>
-        <a href={`/post/${idx}`} key={idx} >
-          <div className='row'>
-            {post.picture &&
-              <img src={post.picture.src} alt={post.picture.alt || 'Post picture'} />
-            }
-            <p>{post.summary}</p>
-            <div className='text-muted'>{post.date.toLocaleDateString()}</div>
-            <button>View</button>
+const Posts = () => (
+  <div className='margin-large child-borders'>
+    {allPosts.map((post, idx) =>
+      <div key={idx} className='posts-row padding'>
+        <a className='posts-link row' href={`/post/${idx}`}  >
+          <div className='col-3'>
+              <div className='posts-date text-muted'>
+                {post.date.toLocaleDateString()}
+              </div>
+              {post.picture &&
+                <img
+                  className='posts-img'
+                  src={post.picture.src}
+                  alt={post.picture.alt || 'Post picture'}
+                />
+              }
           </div>
-        </a>
+          <p className='col-7'>
+            {post.summary}
+          </p>
+          <button className='posts-btn background-secondary col-2 btn-small'>
+            View
+          </button>
+          </a>
+        </div>
       )}
     </div>
-  )
-}
+)
 
 export default Posts

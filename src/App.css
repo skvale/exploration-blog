@@ -1,3 +1,56 @@
-.btn-small {
+body {
+  background-color: floralwhite;
+}
+
+p {
+  letter-spacing: 0.3px;
+  line-height: 28px;
+}
+
+.small-header {
+  background: floralwhite;
+  position: absolute;
+  top: -25px;
+  left: 29px;
+  padding: 0 8px;
+}
+
+a.p-blog-header-btn {
+  background-color: floralwhite;
   margin-right: 8px;
+}
+
+.posts-row {
+  max-height: 300px;
+  margin-bottom: 16px;
+}
+
+.posts-link {
+  background-image: none;
+}
+
+.posts-img {
+  max-height: 200px;
+  min-height: 10vh;
+  min-width: 10vw;
+}
+
+.posts-btn {
+  align-self: start;
+  margin-top: -30px;
+}
+
+.posts-date {
+  width: fit-content;
+  margin-top: -28px;
+  background-color: floralwhite;
+  padding: 4px;
+  font-size: 0.8rem;
+}
+
+.post-date {
+  float: right;
+  font-size: 0.7rem;
+  letter-spacing: 5px;
+  margin-top: -28px;
 }

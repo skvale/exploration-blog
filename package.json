@@ -1,19 +1,19 @@
 {
-  "name": "homestead",
+  "name": "papercss-blog",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "papercss": "^1.1.0",
     "react": "^16.1.1",
     "react-dom": "^16.1.1",
+    "react-icons": "^2.2.7",
     "react-markdown": "^3.0.2",
     "react-scripts": "1.0.17"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "test": "react-scripts test --env=jsdom"
   },
   "devDependencies": {
     "eslint": "^4.12.0"

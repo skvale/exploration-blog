@@ -3,10 +3,13 @@ import ReactMarkdown from 'react-markdown'
 import allPosts from './all-posts'
 
 const Post = ({ index }) => {
+  const post = allPosts[index]
   return (
     <div>
-      {index}
-      <ReactMarkdown source={allPosts[index].content} />
+      <div className='post-date text-muted'>
+        {post.date.toLocaleDateString()}
+      </div>
+      <ReactMarkdown source={post.content} />
     </div>
   )
 }
